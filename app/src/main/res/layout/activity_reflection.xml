@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/maroon">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imag_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/ic_baseline_grass_24"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+            app:strokeColor="@color/light_red"
+            app:strokeWidth="2dp"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/login_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:textSize="20sp"
+            android:text="Smart Lights Projects"
+            android:fontFamily="@font/mont_medium"
+            app:layout_constraintTop_toBottomOf="@+id/imag_logo"/>
+
+        <GridView
+            android:id="@+id/idGVcourses"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:horizontalSpacing="15dp"
+            app:layout_constraintTop_toBottomOf="@+id/login_header"
+            android:numColumns="2"
+            android:verticalSpacing="15dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/devicescan"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/ic_baseline_qr_code_scanner_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/installation"
+        android:layout_width="0dp"
+       android:background="@color/white"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/controller"
+        android:layout_height="45dp"
+        android:text="Installation"
+        android:paddingRight="10dp"
+        android:fontFamily="@font/mont_medium"
+        android:drawableRight="@drawable/ic_baseline_add_24_bll"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+<!--    android:background="@drawable/ic_baseline_add_24"-->
+<!--    android:background="@drawable/ic_baseline_select_all_24"-->
+
+    <TextView
+        android:id="@+id/controller"
+        android:layout_width="0dp"
+        android:text="Controller"
+        android:fontFamily="@font/mont_medium"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:paddingRight="10dp"
+        android:background="@color/white"
+        android:drawableRight="@drawable/ic_baseline_select_all_24"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toEndOf="@+id/installation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.smartlights">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        tools:replace="android:allowBackup"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        android:theme="@style/Theme.SmartLights">
+
+        <activity android:name=".smartapps.ui.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <uses-library android:name="com.google.android.maps"></uses-library>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDG6f7SzvoO6Okwa8L8WtWx9jNalu1ioRc" />
+
+        <activity android:name=".smartapps.ui.LoginActivity" />
+        <activity android:name=".smartapps.ui.DashboardActivity" />
+        <activity android:name=".smartapps.ui.InstallationActivity" />
+        <activity android:name=".smartapps.ui.MaintenanceActivity" />
+        <activity android:name=".smartapps.ui.LauncherActivity" />
+        <activity android:name=".smartapps.ui.ZoneFinderActivity" />
+        <activity android:name=".smartapps.ui.ReflectorActivity" />
+        <activity android:name=".smartapps.ui.ScanActivity" />
+    </application>
+
+
+
+</manifest>
