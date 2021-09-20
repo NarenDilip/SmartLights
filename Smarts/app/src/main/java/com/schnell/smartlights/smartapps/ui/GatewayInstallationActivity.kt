@@ -613,7 +613,7 @@ class GatewayInstallationActivity : AppCompatActivity(), ResponseListener, ZoneD
                                 editText.isSingleLine = true
 
                                 editText.setFilters(arrayOf<InputFilter>(InputFilter.LengthFilter(30)))
-                                editText.filters = arrayOf<InputFilter>(ignoreFirstWhiteSpace())
+//                                editText.filters = arrayOf<InputFilter>(ignoreFirstWhiteSpace())
 
                                 if (user_entry.toString().contains("Scan")) {
 
@@ -1171,12 +1171,18 @@ class GatewayInstallationActivity : AppCompatActivity(), ResponseListener, ZoneD
         zoneCall!!.setText(ManufacturerData.toString())
         seditor!!.putString("Zone", ManufacturerData)
         seditor!!.commit()
+        AppPreference.put(applicationContext, "Zone", ManufacturerData.toString())
         zoneDialog!!.dismiss()
     }
 
     override fun WardDetails(ManufacturerData: String?) {
         wardCall!!.setText(ManufacturerData.toString())
         wardDialog!!.dismiss()
+        AppPreference.put(
+            applicationContext,
+            "Ward",
+            ManufacturerData.toString()
+        )
     }
 
 

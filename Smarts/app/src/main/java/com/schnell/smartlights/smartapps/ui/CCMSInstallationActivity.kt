@@ -647,7 +647,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
 
                                 editText.filters =
                                     arrayOf<InputFilter>(InputFilter.LengthFilter(30))
-                                editText.filters = arrayOf<InputFilter>(ignoreFirstWhiteSpace())
+//                                editText.filters = arrayOf<InputFilter>(ignoreFirstWhiteSpace())
 
                                 if (user_entry.toString().contains("Scan")) {
 
@@ -1153,12 +1153,18 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
         zoneCall!!.setText(ManufacturerData.toString())
         seditor!!.putString("Zone", ManufacturerData)
         seditor!!.commit()
+        AppPreference.put(applicationContext, "Zone", ManufacturerData.toString())
         zoneDialog!!.dismiss()
     }
 
     override fun WardDetails(ManufacturerData: String?) {
         wardCall!!.setText(ManufacturerData.toString())
         wardDialog!!.dismiss()
+        AppPreference.put(
+            applicationContext,
+            "Ward",
+            ManufacturerData.toString()
+        )
     }
 
     override fun CCMSDetails(CCMSData: String?) {
