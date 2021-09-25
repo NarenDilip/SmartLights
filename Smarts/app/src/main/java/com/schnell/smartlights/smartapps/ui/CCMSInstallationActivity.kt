@@ -108,6 +108,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
 //    private var CollectString: Int? = 0
 
     private var deviceType: String? = null
+    private var ebMeterNumber: String? = null
 //    private var AssetGroupId = ""
 
     private var pref: SharedPreferences? = null
@@ -132,6 +133,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
 
     private var customAdapter: CustomAdapter? = null
     private var deviceCall: String? = ""
+    private var deviceEnergyMeterCall: String? = ""
     private var cCMSDeviceGroupId: String? = ""
     private var createdGroupId: String? = ""
     private var createdRegionGroupId: String? = ""
@@ -146,6 +148,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
     private var responseCode: String? = ""
     private var deviceId: String? = null
     private var serviceCall: String? = ""
+    private var RegionName: String? = ""
 
     //    private var device: Device? = null
     private var preInstallDeviceGroupId: String? = ""
@@ -208,6 +211,8 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
         pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
         seditor = pref!!.edit()
 
+        AppPreference.clear(applicationContext, "Board Number")
+
         deviceType = AppPreference[applicationContext, "DeviceType", ""]
         val sZone = AppPreference[applicationContext, "Zone", ""]
         val sWard = AppPreference[applicationContext, "Ward", ""]
@@ -264,7 +269,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
             startActivity(intent)
         }
 
-        val RegionName = AppPreference.get(
+        RegionName = AppPreference.get(
             applicationContext,
             "SelectedZone", ""
         )
@@ -407,6 +412,7 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
                     jsonObject!!.put("ward", wardCall!!.text.toString())
 
                     val boardNumber = jsonObject!!.get("boardnumber").toString()
+                    deviceEnergyMeterCall = "NCh_Eb"
                     AuditServiceRequest.CCMSSaveBoardNumber(
                         this,
                         boardNumber
@@ -691,6 +697,19 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
                                 }
 
                                 textInputLayout.layoutParams = textInputLayoutParams
+
+                                if (dataset.get("description").toString() == "EB Meter No") {
+                                    if (ebMeterNumber!!.isNotEmpty()) {
+                                        editText.setText(ebMeterNumber)
+                                    }
+                                }
+
+                                if (dataset.get("description").toString() == "Board Number") {
+                                    var boardN =
+                                        AppPreference[applicationContext, "Board Number", ""]
+                                    editText.setText(boardN)
+                                }
+
                                 textInputLayout.addView(editText, editTextParams)
                                 textInputLayout.hint = dataset.get("description").toString()
                                 lLayout.addView(textInputLayout)
@@ -1140,8 +1159,21 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
             try {
                 val poleDetails = AppPreference[this, datalistEdittext!![i].toString(), ""]
                 if (poleDetails!!.isNotEmpty()) {
-                    val editable: Editable = SpannableStringBuilder(poleDetails)
-                    tlist!![i].editText!!.text = editable
+                    if (datalistEdittext!![i].toString().equals("Board Number")) {
+                        val editable: Editable = SpannableStringBuilder(poleDetails)
+                        tlist!![i].editText!!.text = editable
+                        deviceEnergyMeterCall = "Ch_Eb"
+                        if (ebMeterNumber == null) {
+                            AuditServiceRequest.CCMSSaveBoardNumber(
+                                this,
+                                editable.toString()
+                            )
+                        }
+//                        deviceEnergyMeterCall = "NCh_Eb"
+                    } else {
+                        val editable: Editable = SpannableStringBuilder(poleDetails)
+                        tlist!![i].editText!!.text = editable
+                    }
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
@@ -1354,19 +1386,75 @@ class CCMSInstallationActivity : AppCompatActivity(), ResponseListener, ZoneDial
         if (responseData != null) {
             AppDialogs.hideProgressDialog()
             if (requestType == 6) {
-                val responseObj = JSONObject(responseData)
-                responseCode = responseObj.getString("error_code").toString()
-                if (responseCode.equals("0000")) {
+                if (deviceEnergyMeterCall == "NCh_Eb") {
+                    val responseObj = JSONObject(responseData)
+                    responseCode = responseObj.getString("error_code").toString()
+                    if (responseCode.equals("0000")) {
 
-                    AppDialogs.showProgressDialog(this, "Please wait..")
+                        AppDialogs.showProgressDialog(this, "Please wait..")
 //                    CdeviceId = (responseData as ScannerResponse).panelid
-                    cdeviceId = responseObj.getString("panel_uid").toString()
-                    if (!cdeviceId.isNullOrEmpty() && !cdeviceId.equals("-")) {
-                        AppDialogs.showProgressDialog(
-                            this,
-                            "Please wait connecting to server.."
-                        )
-                        ThingsManager.gettenantDevices(this, this, cdeviceId!!, Saccount = "Smart")
+                        cdeviceId = responseObj.getString("panel_uid").toString()
+                        if (!cdeviceId.isNullOrEmpty() && !cdeviceId.equals("-")) {
+                            AppDialogs.showProgressDialog(
+                                this,
+                                "Please wait connecting to server.."
+                            )
+                            ThingsManager.gettenantDevices(
+                                this,
+                                this,
+                                cdeviceId!!,
+                                Saccount = "Smart"
+                            )
+                        }
+                    }
+                } else if (deviceEnergyMeterCall == "Ch_Eb") {
+                    val responseObj = JSONObject(responseData)
+                    responseCode = responseObj.getString("error_code").toString()
+                    if (responseCode.equals("0000")) {
+                        ebMeterNumber = responseObj.getString("eb_meter_no").toString()
+                        if (!ebMeterNumber.isNullOrEmpty()) {
+
+                            val detailslist =
+                                DatabaseClient.getInstance(applicationContext).appDatabase.deviceDAO!!.getSelectedname(
+                                    RegionName
+                                )
+
+                            regionCall!!.setText(RegionName)
+
+                            if (detailslist.isNotEmpty()) {
+                                for (i in 0 until detailslist.size) {
+                                    ThingsManager.getDeviceLatestAttributes(
+                                        c = this,
+                                        deviceId = detailslist[i].deviceid,
+                                        entityType = "ASSET",
+                                        Keys = deviceType!!,
+                                        Saccount = "Smart"
+                                    )
+                                }
+                            }
+
+                        }
+                    } else {
+                        ebMeterNumber = "-"
+
+                        val detailslist =
+                            DatabaseClient.getInstance(applicationContext).appDatabase.deviceDAO!!.getSelectedname(
+                                RegionName
+                            )
+
+                        regionCall!!.setText(RegionName)
+
+                        if (detailslist.isNotEmpty()) {
+                            for (i in 0 until detailslist.size) {
+                                ThingsManager.getDeviceLatestAttributes(
+                                    c = this,
+                                    deviceId = detailslist[i].deviceid,
+                                    entityType = "ASSET",
+                                    Keys = deviceType!!,
+                                    Saccount = "Smart"
+                                )
+                            }
+                        }
                     }
                 }
             }

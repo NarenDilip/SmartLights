@@ -73,7 +73,8 @@ class GatewayInstallationActivity : AppCompatActivity(), ResponseListener, ZoneD
     private var nodeListView: ListView? = null
     private var latt: TextInputEditText? = null
     private var long: TextInputEditText? = null
-//    private var ArmModelList: ArrayList<Model>? = null
+
+    //    private var ArmModelList: ArrayList<Model>? = null
     private var deviceScan: Button? = null
     private var deviceAddBtn: ImageView? = null
     private var deviceView: TextInputEditText? = null
@@ -200,6 +201,8 @@ class GatewayInstallationActivity : AppCompatActivity(), ResponseListener, ZoneD
         customAdapter = CustomAdapter(applicationContext, PoleDeviceData!!)
         nodeListView!!.adapter = customAdapter
 //        NodeListView!!.visibility = View.VISIBLE
+
+        AppPreference.clear(applicationContext, "Board Number")
 
         pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
         seditor = pref!!.edit()
